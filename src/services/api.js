@@ -27,6 +27,28 @@ class ApiService {
       .once('value')
       .then((data) => data.val())
 
+  fetchPeople = () =>
+    this.fb
+      .database()
+      .ref('people')
+      .orderByKey()
+      .once('value')
+      .then((data) => data.val())
+
+  fetchAddPerson = (person) =>
+    this.fb
+      .database()
+      .ref('people')
+      .push(person)
+
+  fetchPersonToEvents = (eventId, personId) =>
+    this.fb
+      .database()
+      .ref('events/' + eventId)
+      .update({
+        peopleIds: personId
+      })
+
   onAuthStateChanged = (callback) => this.fb.auth().onAuthStateChanged(callback)
 }
 

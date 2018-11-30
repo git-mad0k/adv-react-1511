@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { addPerson } from '../../ducks/people'
+import { addPerson, fetchPeople } from '../../ducks/people'
 import NewPersonForm from '../people/new-person-form'
 import PeopleList from '../people/people-list'
 
 class PersonPage extends Component {
   static propTypes = {}
+
+  componentDidMount() {
+    this.props.fetchPeople()
+  }
 
   render() {
     return (
@@ -20,5 +24,5 @@ class PersonPage extends Component {
 
 export default connect(
   null,
-  { addPerson }
+  { addPerson, fetchPeople }
 )(PersonPage)

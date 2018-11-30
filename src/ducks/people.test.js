@@ -2,6 +2,7 @@ import { call, put } from 'redux-saga/effects'
 import { reset } from 'redux-form'
 import { addPersonSaga, addPerson, ADD_PERSON } from './people'
 import { generateId } from '../services/util'
+import api from '../services/api'
 
 describe('People Duck', () => {
   it('should add a person', () => {
@@ -26,6 +27,10 @@ describe('People Duck', () => {
           person: { id, ...person }
         }
       })
+    )
+
+    expect(addPersonProcess.next().value).toEqual(
+      call(api.fetchAddPerson, person)
     )
 
     expect(addPersonProcess.next().value).toEqual(put(reset('person')))
