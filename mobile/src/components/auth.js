@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import {View, Text, TextInput, Button, Platform} from 'react-native'
+import { View, Text, TextInput, Button, Platform } from 'react-native'
 import IsValidEmail from './is-valid-email'
-import {observer, inject} from 'mobx-react'
-
+import { observer, inject } from 'mobx-react'
+import fb from '../services/api'
 @inject('auth')
 @observer
 class Auth extends Component {
@@ -10,33 +10,52 @@ class Auth extends Component {
 
     };
 
+    pushToEvent = () => {
+        this.props.navigation.navigate('eventList')
+    }
+
     render() {
-        const { email, password } = this.props.auth
+        const { email, password, isAuthorized } = this.props.auth
+        if (isAuthorized) {
+            return <View>
+                <Text>You are already logged in</Text>
+                <View>
+                    <Button title="Go to Event" onPress={this.pushToEvent} />
+                </View>
+            </View>
+        }
         return (
             <View>
-                <View style = {styles.container}>
-                    <Text style = {{ fontSize: 40 }}>Email: </Text>
-                    <TextInput value = {email} onChangeText = {this.handleEmailChange} style = {styles.input}/>
+                <View style={styles.container}>
+                    <Text style={{ fontSize: 40 }}>Email: </Text>
+                    <TextInput value={email} onChangeText={this.handleEmailChange} style={styles.input} />
                 </View>
                 <IsValidEmail />
                 <View>
                     <Text>Password: </Text>
-                    <TextInput value = {password} onChangeText = {this.handlePasswordChange}
-                               secureTextEntry
+                    <TextInput value={password} onChangeText={this.handlePasswordChange}
+                        secureTextEntry
                     />
                 </View>
                 <View>
-                    <Button title="Sign In" onPress={this.handleSignIn}/>
+                    <Button title="Sign In" onPress={this.handleSignIn} />
                 </View>
+
             </View>
         )
     }
 
-    handleEmailChange = (email) => stores.auth.setEmail(email)
-    handlePasswordChange = (password) => stores.auth.setPassword(password)
+    handleEmailChange = (email) => this.props.auth.setEmail(email)
+    handlePasswordChange = (password) => this.props.auth.setPassword(password)
 
     handleSignIn = () => {
-        this.props.onSubmit()
+        const { email, password } = this.props.auth
+        fb.signIn(email, password)
+            .then(data => {
+                this.props.auth.signIn(data)
+                this.props.navigation.navigate('eventList')
+            })
+
     }
 }
 

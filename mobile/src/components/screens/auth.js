@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
+import { observer, inject } from 'mobx-react'
 import Auth from '../auth'
+import NavigatorComponent from '../common/navigator'
+
 
 class AuthScreen extends Component {
     static propTypes = {
@@ -12,15 +15,12 @@ class AuthScreen extends Component {
     }
 
     render() {
-        return <Auth onSubmit = {this.handleSubmit}/>
+        return <Auth {...this.props} />
     }
 
-    handleSubmit = () => {
-        this.props.navigation.navigate('eventList')
-    }
 }
 
 const styles = StyleSheet.create({
 })
 
-export default AuthScreen
+export default NavigatorComponent(AuthScreen)
